@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./assets/CSS/style.css">
+
+    <!-- <link type="text/javascript" href="./assets/JavaScript/app.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+
+    <title>Let's Look at Giphy's</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">What's Your Favorite Animal?</h1><br>
+                <p class="lead">Pick any button you see to get a total of 10 gifs of the animal of your choosing! If you
+                    want to add a different animal, just type it in the search bar and click
+                    submit.</p>
+                <p class="lead">Feel free to add as many animals as you want!</p>
+            </div>
+        </div><br>
+        <div id="buttons-view"></div>
+
+        <form>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Add a Animal</label>
+                <input type="text" id="animal-input" class="form-control">
+            </div>
+            <button id="add-animal" type="submit" class="btn btn-success">Submit</button>
+        </form>
+        <div id="gifs-appear-here"></div>
+
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+
+        var animals = ["Dog", "Sheep", "Cat", "Cow"];
+
+        function displayAnimalGif() {
+            var animal = $(this).attr("data-animal");
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+
+                var results = response.data;
+                console.log(response);
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].rating !== "r" && results[i].rating !== "pg13") {
+                        var gifDiv = $("<div>");
+
+                        var rating = results[i].rating;
+                        var p = $("<p>").text("Rating: " + rating);
+                        gifDiv.append(p);
+
+                        var animalImg = $("<img>");
+                        animalImg.addClass("gif");
+                        animalImg.attr("src", results[i].images.fixed_height_still.url);
+                        animalImg.attr("data-still", results[i].images.fixed_height_still.url);
+                        animalImg.attr("data-animate", results[i].images.fixed_height.url);
+                        animalImg.attr("data-state", "still");
+
+                        gifDiv.append(animalImg);
+
+                        animalImg.on("click", function (event) {
+                            console.log(animalImg);
+                        })
+
+                        $("#gifs-appear-here").prepend(gifDiv);
+                    }
+                }
+            })
+
+        }
+
+        function renderButtons() {
+            $("#buttons-view").empty();
+            for (var i = 0; i < animals.length; i++) {
+                var a = $("<button>");
+
+                a.addClass("animal-btn");
+
+                a.attr("data-animal", animals[i]);
+
+                a.text(animals[i]);
+
+                $("#buttons-view").append(a);
+
+            }
+        }
+        renderButtons();
+
+        $("#add-animal").on("click", function (event) {
+            event.preventDefault();
+            var animal = $("#animal-input").val().trim();
+            animals.push(animal);
+            renderButtons();
+        })
+
+        $(document).on("click", ".animal-btn", displayAnimalGif);
+
+        // renderButtons();
+
+        $(document).on("click", ".gif", function () {
+            var state = $(this).attr("data-state");
+            if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+            } else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+            }
+
+        })
+
+    </script>
+    </div>
+</body>
+
+</html>
