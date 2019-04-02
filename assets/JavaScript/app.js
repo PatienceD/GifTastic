@@ -4,7 +4,6 @@ $(document).ready(function () {
 
     //once the user clicks on a button, the function displayAnimalGif runs
     function displayAnimalGif() {
-        $("#gifs-appear-here").empty();
         var animal = $(this).attr("data-animal");
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
 
