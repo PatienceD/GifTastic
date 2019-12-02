@@ -18,19 +18,19 @@ $(document).ready(function () {
                 if (results[i].rating !== "r" && results[i].rating !== "pg13") {
                     var gifDiv = $("<div>");
 
-                    //getting the rating and appending it to the gifDiv
-                    var rating = results[i].rating;
-                    var p = $("<p>").text("Rating: " + rating);
-                    gifDiv.append(p);
-
                     //getting the title and appending it to the gifDic
                     var title = results[i].title;
-                    var p =$("<p>").text("Title: " + title);
+                    var p = $("<h1>").text("Title: " + title);
+                    gifDiv.append(p);
+
+                    //getting the rating and appending it to the gifDiv
+                    var rating = results[i].rating;
+                    var p = $("<h2>").text("Rating: " + rating);
                     gifDiv.append(p);
 
                     //getting the source and append it to the gifDiv
                     var source = results[i].source;
-                    var p = $("<p>").text("Where to find: " + source);
+                    var p = $("<h3>").text("Where to find: " + source);
                     gifDiv.append(p);
 
                     //creating an image and giving it a class
@@ -43,12 +43,9 @@ $(document).ready(function () {
                     gifDiv.append(animalImg);
 
                     $("#gifs-appear-here").prepend(gifDiv);
-                    
                 }
-                
             }
         })
-
     }
 
     function renderButtons() {
@@ -89,6 +86,5 @@ $(document).ready(function () {
             $(this).attr("src", $(this).attr("data-still"));
             $(this).attr("data-state", "still");
         }
-
     })
 });
